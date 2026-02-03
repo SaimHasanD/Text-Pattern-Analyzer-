@@ -53,5 +53,20 @@
         {% endfor %}
     </ol>
 
+    <br>
+
+    <!-- Sentence Complexity -->
+    <h3>Sentence Complexity Analysis:</h3>
+        
+    <p><strong>Most Complex Sentence:</strong></p>
+    <blockquote>{{ most_complex_sentence }}</blockquote>
+    <p>Complexity Score: <strong>{{ complex_score }}</strong></p>
+        
+    <br>
+        
+    <p><strong>Most Simple Sentence:</strong></p>
+    <blockquote>{{ most_simple_sentence }}</blockquote>
+    <p>Complexity Score: <strong>{{ simple_score }}</strong></p>
+
     {% endif %}
 </body>

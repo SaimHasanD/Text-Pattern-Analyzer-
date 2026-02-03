@@ -1,10 +1,17 @@
 from django.shortcuts import render
 from collections import Counter
+import re
+import nltk
 
 def reading_time_view(request):
     minutes = None
     seconds = None
     user_text = ""
+    most_complex_sentence = None
+    most_simple_sentence = None
+    complex_score = None
+    simple_score = None
+
     
     if request.method == 'POST':
         user_text = request.POST.get('user_text', '')
@@ -40,6 +47,57 @@ def reading_time_view(request):
         
         top_phrases = phrase_counts.most_common(3)
 
+        # Split text into sentences using NLTK
+        sentences = nltk.sent_tokenize(user_text)
+        
+        connectors = {'and', 'but', 'because', 'although', 'which', 'that', 'while',
+                      'however', 'therefore', 'if', 'when', 'since', 'though'}
+        
+        sentence_scores = []
+
+        for sentence in sentences:
+            # Clean the sentence
+            sentence_words = sentence.split()
+            
+            if len(sentence_words) == 0:
+                continue
+            
+            long_words = 0
+            connector_count = 0
+            punctuation_count = 0
+            for char in sentence:
+                if char in '.,!?";:()[]{}':
+                    punctuation_count += 1
+
+            for i, word in enumerate(sentence_words):
+                clean_word = word.lower().strip('.,!?";:()[]{}')
+                
+                if len(clean_word) > 6:
+                    long_words += 1
+                
+                if clean_word in connectors:
+                    connector_count += 1
+                           
+            # Calculate complexity score
+            score = long_words + connector_count + punctuation_count
+
+            sentence_scores.append({
+                'text': sentence,
+                'score': score
+            })
+
+        # Find most complex and most simple sentences
+        if sentence_scores:
+            sorted_sentences = sorted(sentence_scores, key=lambda x: x['score'])
+
+            most_simple = sorted_sentences[0]
+            most_complex = sorted_sentences[-1]
+
+            most_complex_sentence = most_complex['text']
+            complex_score = most_complex['score']
+
+            most_simple_sentence = most_simple['text']
+            simple_score = most_simple['score']
 
     context = {
         'minutes': minutes,
@@ -47,6 +105,10 @@ def reading_time_view(request):
         'user_text': user_text,
         'top_words': top_words,
         'top_phrases': top_phrases,
+        'most_complex_sentence': most_complex_sentence,
+        'most_simple_sentence': most_simple_sentence,
+        'complex_score': complex_score,
+        'simple_score': simple_score,
     }
     
     return render(request, 'text_analyzer/reading_time.html', context)
