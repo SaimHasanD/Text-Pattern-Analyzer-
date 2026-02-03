@@ -34,5 +34,15 @@
     {% if minutes is not None %}
         <h2>Result:</h2>
         <p><strong>Read time: {{ minutes }} minutes and {{ seconds }} seconds</strong></p>
+
+        <br>
+
+    <h3>Top 3 Most Repeated words</h3>
+     <ol>
+        {% for word, count in top_words %}
+            <li>{{ word }} - repeated {{ count }} times</li>
+        {% endfor %}
+    </ol>
+
     {% endif %}
 </body>
