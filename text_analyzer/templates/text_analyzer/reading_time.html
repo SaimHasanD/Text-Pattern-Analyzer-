@@ -44,5 +44,14 @@
         {% endfor %}
     </ol>
 
+    <br>
+        
+    <h3>Top 3 Most Repeated Two-Word Phrases:</h3>
+    <ol>
+        {% for phrase, count in top_phrases %}
+            <li>"{{ phrase }}" - repeated {{ count }} times</li>
+        {% endfor %}
+    </ol>
+
     {% endif %}
 </body>
