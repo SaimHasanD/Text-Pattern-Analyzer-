@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<head>
+    <title>Text Pattern Analyzer</title>
+</head>
+<body>
+    <p>Paste or type your text below to calculate reading time (200 words per minute)</p>
+    
+    <hr>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="text_input">Enter your text:</label>
+        <br><br>
+        
+        <!-- Textarea for user input -->
+        <textarea 
+            id="text_input"
+            name="user_text" 
+            rows="15" 
+            cols="80" 
+            placeholder="Paste or type your long text here..." 
+            required>{{ user_text }}
+        </textarea>
+        
+        <br><br>
+        
+        <button type="submit">Calculate Reading Time</button>
+    </form>
+
+    <hr>
+    
+    <!-- Display result -->
+    {% if minutes is not None %}
+        <h2>Result:</h2>
+        <p><strong>Read time: {{ minutes }} minutes and {{ seconds }} seconds</strong></p>
+    {% endif %}
+</body>
