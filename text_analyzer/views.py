@@ -7,6 +7,8 @@ def reading_time_view(request):
     minutes = None
     seconds = None
     user_text = ""
+    top_words = []
+    top_phrases = []
     most_complex_sentence = None
     most_simple_sentence = None
     complex_score = None
@@ -62,6 +64,7 @@ def reading_time_view(request):
             if len(sentence_words) == 0:
                 continue
             
+            score = 0
             long_words = 0
             connector_count = 0
             punctuation_count = 0
@@ -72,14 +75,25 @@ def reading_time_view(request):
             for i, word in enumerate(sentence_words):
                 clean_word = word.lower().strip('.,!?";:()[]{}')
                 
-                if len(clean_word) > 6:
+                if len(clean_word) > 8:
                     long_words += 1
                 
                 if clean_word in connectors:
                     connector_count += 1
+
+            score += min(long_words, 3)
+            score += min(connector_count, 4)
+            score += min(punctuation_count, 2)
                            
             # Calculate complexity score
-            score = long_words + connector_count + punctuation_count
+            # score = long_words + connector_count + punctuation_count
+            word_count = len(sentence_words)
+            if word_count >= 30:
+                score += 5
+            elif word_count >= 21:
+                score += 3
+            elif word_count >= 10:
+                score += 1
 
             sentence_scores.append({
                 'text': sentence,
