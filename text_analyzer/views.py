@@ -108,10 +108,10 @@ def reading_time_view(request):
             most_complex = sorted_sentences[-1]
 
             most_complex_sentence = most_complex['text']
-            complex_score = most_complex['score']
+            complex_score = min(most_complex['score'], 10)
 
             most_simple_sentence = most_simple['text']
-            simple_score = most_simple['score']
+            simple_score = min(most_simple['score'], 10)
 
     context = {
         'minutes': minutes,
